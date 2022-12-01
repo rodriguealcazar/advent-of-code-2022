@@ -1,9 +1,20 @@
+use std::env;
 use std::fs::File;
 use std::io::{self, BufRead};
 use std::path::Path;
 
 fn main() {
-    if let Ok(lines) = read_lines("./input_1.txt") {
+    let args: Vec<String> = env::args().collect();
+
+    match args[1].parse() {
+        Ok(1) => part_one(&args[2]),
+        Ok(2) => part_two(&args[2]),
+        _ => println!("Chose between part 1 or 2"),
+    }
+}
+
+fn part_one(input: &str) {
+    if let Ok(lines) = read_lines(format!("{input}")) {
         let mut max = 0;
         let mut current_total = 0;
         for line in lines {
@@ -21,6 +32,8 @@ fn main() {
         println!("Most calories carried: {max}");
     }
 }
+
+fn part_two(input: &str) {}
 
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
 where P: AsRef<Path>, {
