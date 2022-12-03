@@ -10,7 +10,7 @@ fn main() {
 
     match args[1].parse() {
         Ok(1) => part_one(&args[2]),
-        //Ok(2) => part_two(&args[2]),
+        Ok(2) => part_two(&args[2]),
         _ => println!("Chose between part 1 or 2"),
     }
 }
@@ -53,6 +53,53 @@ fn part_one(input: &str) {
                 } else if *draws.get(elf).unwrap() == mine {
                     total += 3;
                 }
+            }
+        }
+        println!("Final score: {total}");
+    } else {
+        println!("Nothing to read in '{input}'.");
+    }
+}
+
+fn part_two(input: &str) {
+    let mut winners = HashMap::new();
+    winners.insert("A", "B");
+    winners.insert("B", "C");
+    winners.insert("C", "A");
+
+    let mut losers = HashMap::new();
+    losers.insert("A", "C");
+    losers.insert("B", "A");
+    losers.insert("C", "B");
+
+    let mut points = HashMap::new();
+    points.insert("A", 1);
+    points.insert("B", 2);
+    points.insert("C", 3);
+
+    if let Ok(lines) = read_lines(format!("{input}")) {
+        let mut total: u32 = 0;
+        for parsed_line in lines {
+            if let Ok(line) = parsed_line {
+                if line.len() == 0 {
+                    continue;
+                }
+
+                let plays = line.split_whitespace().collect::<Vec<&str>>();
+                let elf = *plays.get(0).unwrap();
+                let play = *plays.get(1).unwrap();
+
+                let score: u32;
+                if play == "X" {
+                    let mine = losers.get(elf).unwrap();
+                    score = *points.get(mine).unwrap();
+                } else if play == "Y" {
+                    score = 3 + *points.get(elf).unwrap();
+                } else {
+                    let mine = winners.get(elf).unwrap();
+                    score = 6 + *points.get(mine).unwrap();
+                }
+                total += score;
             }
         }
         println!("Final score: {total}");
