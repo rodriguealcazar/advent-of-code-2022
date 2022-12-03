@@ -6,6 +6,16 @@ use std::path::Path;
 
 
 fn main() {
+    let args: Vec<String> = env::args().collect();
+
+    match args[1].parse() {
+        Ok(1) => part_one(&args[2]),
+        //Ok(2) => part_two(&args[2]),
+        _ => println!("Chose between part 1 or 2"),
+    }
+}
+
+fn part_one(input: &str) {
     let mut winners = HashMap::new();
     winners.insert("A", "Y");
     winners.insert("B", "Z");
@@ -20,8 +30,6 @@ fn main() {
     points.insert("X", 1);
     points.insert("Y", 2);
     points.insert("Z", 3);
-
-    let input = input_file();
 
     if let Ok(lines) = read_lines(format!("{input}")) {
         let mut elf: &str;
@@ -51,12 +59,6 @@ fn main() {
     } else {
         println!("Nothing to read in '{input}'.");
     }
-}
-
-fn input_file() -> String {
-    let args: Vec<String> = env::args().collect();
-
-    return String::from(args.get(1).unwrap());
 }
 
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
