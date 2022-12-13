@@ -47,7 +47,7 @@ fn part_one(input: &str) {
         lines.next();
 
         let RE = Regex::new(r"move ([0-9]+) from ([0-9]+) to ([0-9]+)").unwrap();
-        let mut how_many: u8;
+        let mut how_many: usize;
         let mut from: usize;
         let mut to: usize;
         for line in lines {
@@ -57,10 +57,9 @@ fn part_one(input: &str) {
                 from = captures.get(2).unwrap().as_str().parse().unwrap();
                 to = captures.get(3).unwrap().as_str().parse().unwrap();
 
-                for m in 0..how_many {
-                    let c = stacks[from - 1].pop().unwrap();
-                    stacks[to - 1].push(c);
-                }
+                let s = &mut stacks[from - 1];
+                let mut moved = s.drain(s.len() - how_many..).collect::<Vec<char>>();
+                stacks[to - 1].append(&mut moved);
             }
         }
         for s in stacks {
